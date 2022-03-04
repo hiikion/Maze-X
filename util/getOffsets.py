@@ -14,6 +14,10 @@ dwEntityList = offsetsList["signatures"]["dwEntityList"]
 dwGlowObjectManager = offsetsList["signatures"]["dwGlowObjectManager"]
 dwForceAttack = offsetsList["signatures"]["dwForceAttack"]
 dwForceJump = offsetsList["signatures"]["dwForceJump"]
+dwClientState = offsetsList["signatures"]["dwClientState"]
+dwForceLeft = offsetsList["signatures"]["dwForceLeft"]
+dwForceRight = offsetsList["signatures"]["dwForceRight"]
+dwClientState_ViewAngles = offsetsList["signatures"]["dwClientState_ViewAngles"]
 
 
 m_iTeamNum = offsetsList["netvars"]["m_iTeamNum"]
@@ -27,6 +31,7 @@ m_flFlashMaxAlpha = offsetsList["netvars"]["m_flFlashMaxAlpha"]
 m_bIsScoped = offsetsList["netvars"]["m_bIsScoped"]
 m_iItemDefinitionIndex = offsetsList["netvars"]["m_iItemDefinitionIndex"]
 m_hActiveWeapon = offsetsList["netvars"]["m_hActiveWeapon"]
+
 
 WEAPON_DEAGLE = 1
 WEAPON_ELITE = 2
