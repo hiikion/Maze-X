@@ -1,2 +1,3 @@
 # Maze-X: csgo hack
-maze v5 but superior
+
+External python csgo hack based of maze v5 
