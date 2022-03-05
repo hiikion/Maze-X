@@ -31,7 +31,10 @@ m_flFlashMaxAlpha = offsetsList["netvars"]["m_flFlashMaxAlpha"]
 m_bIsScoped = offsetsList["netvars"]["m_bIsScoped"]
 m_iItemDefinitionIndex = offsetsList["netvars"]["m_iItemDefinitionIndex"]
 m_hActiveWeapon = offsetsList["netvars"]["m_hActiveWeapon"]
-
+m_bUseCustomAutoExposureMin = offsetsList["netvars"]["m_bUseCustomAutoExposureMin"]
+m_bUseCustomAutoExposureMax = offsetsList["netvars"]["m_bUseCustomAutoExposureMax"]
+m_flCustomAutoExposureMin = offsetsList["netvars"]["m_flCustomAutoExposureMin"]
+m_flCustomAutoExposureMax = offsetsList["netvars"]["m_flCustomAutoExposureMax"]
 
 WEAPON_DEAGLE = 1
 WEAPON_ELITE = 2
