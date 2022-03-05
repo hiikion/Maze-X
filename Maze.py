@@ -279,11 +279,16 @@ def bhop_thread():
 
 def AutoPistol():
     while dpg.get_value(auto_pistol_):
+        lPlayer = pm.read_int(client + dwLocalPlayer)
+
+        weapon = pm.read_int(lPlayer + m_hActiveWeapon)
+        weapon_entity = pm.read_int(client + dwEntityList + ((weapon & 0xFFF) - 1) * 0x10)
+        weapon_id = int(pm.read_short(weapon_entity + m_iItemDefinitionIndex))
+
+        pistols = [WEAPON_USP_SILENCER, WEAPON_DEAGLE, WEAPON_CZ75A, WEAPON_FIVESEVEN, WEAPON_GLOCK, WEAPON_TEC9, WEAPON_REVOLVER, WEAPON_P250, WEAPON_HKP2000, WEAPON_ELITE]
+
         if GetKeyState(1) == -127 or GetKeyState(1) == -128:
-
-            lPlayer = pm.read_int(client + dwLocalPlayer)
-
-            if lPlayer and gameIsActive():
+            if lPlayer and gameIsActive() and weapon_id in pistols:
                 pm.write_int(client + dwForceAttack, 6)
 
         time.sleep(0.02)
