@@ -2,4 +2,4 @@
 
 External python csgo hack based of maze v5 
 
-<a href="https://ibb.co/PgY0xpM"><img src="https://i.ibb.co/M7hQnTf/image.png" alt="image" border="0"></a>
+<a href="https://imgbox.com/irPxEDIh" target="_blank"><img src="https://thumbs2.imgbox.com/12/a8/irPxEDIh_t.png" alt="image host"/></a>
