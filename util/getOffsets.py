@@ -35,6 +35,10 @@ m_bUseCustomAutoExposureMin = offsetsList["netvars"]["m_bUseCustomAutoExposureMi
 m_bUseCustomAutoExposureMax = offsetsList["netvars"]["m_bUseCustomAutoExposureMax"]
 m_flCustomAutoExposureMin = offsetsList["netvars"]["m_flCustomAutoExposureMin"]
 m_flCustomAutoExposureMax = offsetsList["netvars"]["m_flCustomAutoExposureMax"]
+m_bSpotted = offsetsList["netvars"]["m_bSpotted"]
+m_iObserverMode = offsetsList["netvars"]["m_iObserverMode"]
+m_iFOV = offsetsList["netvars"]["m_iFOV"]
+
 
 WEAPON_DEAGLE = 1
 WEAPON_ELITE = 2

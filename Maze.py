@@ -8,12 +8,14 @@ import re
 from threading import Thread
 import dearpygui.dearpygui as dpg
 import random, string
-import time, keyboard, random
+import time, keyboard, random, mouse
 from win32api import GetKeyState
+
+'''
 import ini
 import subprocess
 from pathvalidate import validate_filename
-
+'''
 
 # legit
 
@@ -279,19 +281,22 @@ def bhop_thread():
 
 def AutoPistol():
     while dpg.get_value(auto_pistol_):
-        lPlayer = pm.read_int(client + dwLocalPlayer)
+        try:
+            lPlayer = pm.read_int(client + dwLocalPlayer)
 
-        weapon = pm.read_int(lPlayer + m_hActiveWeapon)
-        weapon_entity = pm.read_int(client + dwEntityList + ((weapon & 0xFFF) - 1) * 0x10)
-        weapon_id = int(pm.read_short(weapon_entity + m_iItemDefinitionIndex))
+            weapon = pm.read_int(lPlayer + m_hActiveWeapon)
+            weapon_entity = pm.read_int(client + dwEntityList + ((weapon & 0xFFF) - 1) * 0x10)
+            weapon_id = int(pm.read_short(weapon_entity + m_iItemDefinitionIndex))
 
-        pistols = [WEAPON_USP_SILENCER, WEAPON_DEAGLE, WEAPON_CZ75A, WEAPON_FIVESEVEN, WEAPON_GLOCK, WEAPON_TEC9, WEAPON_REVOLVER, WEAPON_P250, WEAPON_HKP2000, WEAPON_ELITE]
+            pistols = [WEAPON_USP_SILENCER, WEAPON_DEAGLE, WEAPON_CZ75A, WEAPON_FIVESEVEN, WEAPON_GLOCK, WEAPON_TEC9, WEAPON_P250, WEAPON_HKP2000, WEAPON_ELITE]
 
-        if GetKeyState(1) == -127 or GetKeyState(1) == -128:
-            if lPlayer and gameIsActive() and weapon_id in pistols:
-                pm.write_int(client + dwForceAttack, 6)
+            if GetKeyState(1) == -127 or GetKeyState(1) == -128:
+                if weapon_id == WEAPON_REVOLVER:pass
+                if lPlayer and gameIsActive() and weapon_id in pistols:
+                    pm.write_int(client + dwForceAttack, 6)
 
-        time.sleep(0.02)
+            time.sleep(0.02)
+        except:pass
 
 def AutoPistol_thread():
     try:Thread(target=AutoPistol).start()
@@ -335,7 +340,7 @@ def PlayerFov():
         PlayerFov_Value = dpg.get_value(fov_val)
         lPlayer = pm.read_int(client + dwLocalPlayer)
 
-        if (lPlayer):
+        if lPlayer:
             pm.write_int(lPlayer + m_iDefaultFOV, PlayerFov_Value)
 
         time.sleep(0.05)
@@ -343,7 +348,7 @@ def PlayerFov():
     if not dpg.get_value(fov):
         lPlayer = pm.read_int(client + dwLocalPlayer)
 
-        if (lPlayer):
+        if lPlayer:
             pm.write_int(lPlayer + m_iDefaultFOV, 90)
 
 def PlayerFov_thread():
@@ -351,17 +356,45 @@ def PlayerFov_thread():
 
 
 def RadarHack():
-    pm = pymem.Pymem('csgo.exe')
-    client = pymem.process.module_from_name(pm.process_handle,
-                                        'client.dll')
+    while dpg.get_value(radar):
+        for i in range(1,32):
+            entity = pm.read_int(client+dwEntityList + i * 16)
+            if entity:
+                pm.write_uchar(entity + m_bSpotted, 1)
 
-    clientModule = pm.read_bytes(client.lpBaseOfDll, client.SizeOfImage)
-    address = client.lpBaseOfDll + re.search(rb'\x83\xE0\x0F\x80\xBF',
-                                         clientModule).start() + 9
+def RadarHack_thread():
+    Thread(target=RadarHack).start()
 
-    pm.write_uchar(address, 0 if pm.read_uchar(address) != 0 else 2)
-    pm.close_process()
+def _3rd_person():
+    while dpg.get_value(_3rd_person_):
+        lPlayer = pm.read_int(client + dwLocalPlayer)
+        time.sleep(0.1)
+        pm.write_int(lPlayer + m_iObserverMode, 1)
+        fov = lPlayer + m_iFOV
+        pm.write_int(fov, 100)
 
+    if not dpg.get_value(_3rd_person_):
+        lPlayer = pm.read_int(client + dwLocalPlayer)
+        pm.write_int(lPlayer + m_iObserverMode, 0)
+        fov = lPlayer + m_iFOV
+        pm.write_int(fov, 90)
+
+def _3rd_person_bind():
+    while True:
+        bind = dpg.get_value(_3rd_person_bind_)
+        val = dpg.get_value(_3rd_person_)
+        if bind != '':
+            if bind == 'v':
+                if keyboard.is_pressed(bind):
+                    dpg.set_value(_3rd_person_, not val)
+            if bind == 'mouse3':
+                if mouse.is_pressed(mouse.MIDDLE):
+                    dpg.set_value(_3rd_person_, not val)
+        time.sleep(0.1)
+
+def _3rd_person_thread():
+    Thread(target=_3rd_person).start()
+    Thread(target=_3rd_person_bind).start()
 # end misc
 
 '''
@@ -487,6 +520,12 @@ with dpg.window() as window:
 
             ShowMoney_ = dpg.add_checkbox(label='show money', callback=ShowMoney)
 
+            radar = dpg.add_checkbox(label='radar hack', callback=RadarHack_thread)
+
+            with dpg.group(horizontal=True):
+                _3rd_person_ = dpg.add_checkbox(label='3rd person', callback=_3rd_person_thread)
+                _3rd_person_bind_ = dpg.add_combo(['', 'v', 'mouse3'], width=100)
+                dpg.add_text('(bind can be broken)')
 
 
 with dpg.theme() as global_theme:
