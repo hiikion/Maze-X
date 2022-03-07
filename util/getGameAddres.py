@@ -1,7 +1,6 @@
 import pymem, ctypes
 from util.msgbox import msgbox
 from util.getOffsets import *
-import util.softExit as softExit
 
 
 try:
@@ -11,5 +10,5 @@ try:
     engine_pointer = pm.read_uint(engine + dwClientState)
 
 except Exception as _except:
-    msgbox('Ошибка', str(_except), str("Ошибка."), 0)
-    softExit.pExit()
+    msgbox('error', 'failed to read csgo process', 0)
+    raise SystemExit

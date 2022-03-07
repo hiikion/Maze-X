@@ -1,8 +1,9 @@
 from email.policy import default
 from util.getGameAddres import *
 from util.getOffsets import *
-from util.softExit import*
 from util.getActiveWin import *
+from util.getUppdate import *
+from util.entity import *
 
 import re
 from threading import Thread
@@ -12,9 +13,9 @@ import time, keyboard, random, mouse
 from win32api import GetKeyState
 
 '''
-import ini
 import subprocess
 from pathvalidate import validate_filename
+from configparser import ConfigParser
 '''
 
 # legit
@@ -246,7 +247,144 @@ def GlobalWH():
     pm.close_process()
 
 
+def WeapnGlow():
+    while dpg.get_value(glow_weapons):
+        weap_colr = conver_col_to_int(dpg.get_value(glow_weapons_col))
 
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_gun(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), weap_colr[0] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), weap_colr[1] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), weap_colr[2] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x14), 0.7)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x28), True)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x29), False)
+
+        except:pass
+        time.sleep(0.001)
+    #reset
+    if not dpg.get_value(glow_weapons):
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_gun(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), 0 / 255)
+
+
+        except:pass
+        time.sleep(0.001)
+
+def WeapnGlow_thread():
+    Thread(target=WeapnGlow).start()
+
+
+def c4Glow():
+    while dpg.get_value(glow_c4):
+        c4_colr = conver_col_to_int(dpg.get_value(glow_c4_col))
+
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_c4(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), c4_colr[0] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), c4_colr[1] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), c4_colr[2] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x14), 0.6)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x28), True)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x29), False)
+
+        except:pass
+        time.sleep(0.001)
+    #reset
+    if not dpg.get_value(glow_weapons):
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_c4(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), 0 / 255)
+
+
+        except:pass
+        time.sleep(0.001)
+
+def c4Glow_thread():
+    Thread(target=c4Glow).start()
+
+def NadeGlow():
+    while dpg.get_value(glow_nade):
+        nade_colr = conver_col_to_int(dpg.get_value(glow_nade_col))
+
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_grenade(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), nade_colr[0] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), nade_colr[1] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), nade_colr[2] / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x14), 0.6)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x28), True)
+                    pm.write_bool(glowManager + ((0x38 * (i - 1)) + 0x29), False)
+        except:pass
+
+    time.sleep(0.001)
+    #reset
+    if not dpg.get_value(glow_nade):
+        try:
+            glowManager = pm.read_int(client + dwGlowObjectManager)
+            for i in range(1, 1024):
+                entity_list = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entity_list <= 0:
+                    continue
+                if get_dormant(entity_list):
+                    continue
+
+                elif class_id_grenade(class_id(entity_list)):
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x8), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0xC), 0 / 255)
+                    pm.write_float(glowManager + ((0x38 * (i - 1)) + 0x10), 0 / 255)
+
+
+        except:pass
+        time.sleep(0.001)
+
+def NadeGlow_thread():
+    Thread(target=NadeGlow).start()
 #visuals end
 
 #misc
@@ -365,87 +503,25 @@ def RadarHack():
 def RadarHack_thread():
     Thread(target=RadarHack).start()
 
-def _3rd_person():
-    while dpg.get_value(_3rd_person_):
-        lPlayer = pm.read_int(client + dwLocalPlayer)
-        time.sleep(0.1)
-        pm.write_int(lPlayer + m_iObserverMode, 1)
-        fov = lPlayer + m_iFOV
-        pm.write_int(fov, 100)
+def no_smoke():
+    while dpg.get_value(no_smoke_):
+        glowManager = pm.read_int(client + dwGlowObjectManager)
+        try:
+            for i in range(1, 1024):
+                entityList = pm.read_uint(glowManager + 0x38 * (i - 1) + 0x4)
+                if entityList <= 0:
+                    continue
+                if class_id(entityList) == 157:
+                    pm.write_float(entityList + m_vecOrigin, 0.0)
+                    pm.write_float(entityList + m_vecOrigin + 0x4, 0.0)
+            time.sleep(0.01)
+        except:pass
+    
 
-    if not dpg.get_value(_3rd_person_):
-        lPlayer = pm.read_int(client + dwLocalPlayer)
-        pm.write_int(lPlayer + m_iObserverMode, 0)
-        fov = lPlayer + m_iFOV
-        pm.write_int(fov, 90)
+def no_smoke_thread():
+    Thread(target=no_smoke).start()
 
-def _3rd_person_bind():
-    while True:
-        bind = dpg.get_value(_3rd_person_bind_)
-        val = dpg.get_value(_3rd_person_)
-        if bind != '':
-            if bind == 'v':
-                if keyboard.is_pressed(bind):
-                    dpg.set_value(_3rd_person_, not val)
-            if bind == 'mouse3':
-                if mouse.is_pressed(mouse.MIDDLE):
-                    dpg.set_value(_3rd_person_, not val)
-        time.sleep(0.1)
-
-def _3rd_person_thread():
-    Thread(target=_3rd_person).start()
-    Thread(target=_3rd_person_bind).start()
-# end misc
-
-'''
-# config
-
-def create_config_dir():
-    if not os.path.isdir(path):
-        os.mkdir(path)
-
-def create_config():
-    try:
-        if not os.path.isfile(path + '/' + validate_filename(dpg.get_value(filnam))):
-            with open(path + '/' + validate_filename(dpg.get_value(filnam)), 'w+', encoding='utf-8') as f:
-                # yeah
-                f.write('[legit]')
-                f.write('triggerbot = ' + str(dpg.get_value(triggerbot_)))
-                f.write('trigerbot_delay = ' + str(dpg.get_value(triggerbot_del)))
-                f.write('aim_check_knife = ' + str(dpg.get_value(aim_knifec)))
-                f.write('aim_check_scope = ' + str(dpg.get_value(aim_scopec)))
-                f.write('aim_check_jump = ' + str(dpg.get_value(aim_jumpc)))
-
-                f.write('[visuals]')
-                f.write('glow = ' + str(dpg.get_value(glow_)))
-                f.write('glow_color = ' + str(dpg.get_value(glow_col)))
-                f.write('chams = ' + str(dpg.get_value(chams_)))
-                f.write('chams_color = ' + str(dpg.get_value(chams_col)))
-                f.write('global_wh = ' + str(dpg.get_value(global_wh)))
-                f.write('fov = ' + str(dpg.get_value(fov)))
-                f.write('fov_value = ' + str(dpg.get_value(fov_val)))
-
-                f.write('[misc]')
-                f.write('bhop = ' + str(dpg.get_value(bhop_)))
-                f.write('bhop_mode' + str(dpg.get_value(bhop_mode)))
-                f.write('auto_pistol = ' + str(dpg.get_value(auto_pistol_)))
-                f.write('no_flash = ' + str(dpg.get_value(NoFlash_)))
-                f.write('show_money = ' + str(dpg.get_value(ShowMoney_)))
-        else:
-            msgbox('Error', 'file allready exists', 0)
-    except Exception as ex:
-        msgbox('Error', 'failed to create config: ' + str(ex), 0)
-
-def load_config():
-    pass
-
-
-def save_config():
-    pass
-
-# end config
-'''
-
+check_version()
 
 # gui
 title = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(10))
@@ -480,31 +556,43 @@ with dpg.window() as window:
             
             
         with dpg.tab(label='visuals'):
-            with dpg.group(horizontal=True):
-                glow_ = dpg.add_checkbox(label='glow enemy', callback=GlowESP_thread)
-                glow_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
+            with dpg.collapsing_header(label='glow'):
+                dpg.add_text('entyty:')
+                with dpg.group(horizontal=True):
+                    glow_ = dpg.add_checkbox(label='glow enemy', callback=GlowESP_thread)
+                    glow_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
 
-            with dpg.group(horizontal=True):
-                glow_team = dpg.add_checkbox(label='glow teamates', callback=GlowESP_team_thread)
-                glow_team_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
+                with dpg.group(horizontal=True):
+                    glow_team = dpg.add_checkbox(label='glow teamates', callback=GlowESP_team_thread)
+                    glow_team_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
 
-            dpg.add_text('')
+                dpg.add_text('items:')
+                with dpg.group(horizontal=True):
+                    glow_weapons = dpg.add_checkbox(label='glow weapons', callback=WeapnGlow_thread)
+                    glow_weapons_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
+                
+                with dpg.group(horizontal=True):
+                    glow_c4 = dpg.add_checkbox(label='glow c4', callback=c4Glow_thread)
+                    glow_c4_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
+                
+                with dpg.group(horizontal=True):
+                    glow_nade = dpg.add_checkbox(label='glow nades', callback=NadeGlow_thread)
+                    glow_nade_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
 
-            with dpg.group(horizontal=True):
-                chams_ = dpg.add_checkbox(label='chams enemy', callback=Chams_thread)
-                chams_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
+            with dpg.collapsing_header(label='chams'):
+                with dpg.group(horizontal=True):
+                    chams_ = dpg.add_checkbox(label='chams enemy', callback=Chams_thread)
+                    chams_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True)
 
-            with dpg.group(horizontal=True):
-                chams_team_ = dpg.add_checkbox(label='chams teamates', callback=Chams_team_thread)
-                chams_team_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True) 
+                with dpg.group(horizontal=True):
+                    chams_team_ = dpg.add_checkbox(label='chams teamates', callback=Chams_team_thread) 
+                    chams_team_col = dpg.add_color_edit(no_alpha=True, no_inputs=True, no_tooltip=True) 
 
-            dpg.add_text('')
-            global_wh = dpg.add_checkbox(label='global wh', callback=GlobalWH)
-            dpg.add_text('')
-            dpg.add_text('other:')
-            with dpg.group(horizontal=True):
-                fov = dpg.add_checkbox(label='fov changer', callback=PlayerFov_thread)
-                fov_val = dpg.add_slider_int(label='fov', max_value=179, min_value=1, width=200, default_value=90)
+            with dpg.collapsing_header(label='other'):
+                global_wh = dpg.add_checkbox(label='global wh', callback=GlobalWH)
+                with dpg.group(horizontal=True):
+                    fov = dpg.add_checkbox(label='fov changer', callback=PlayerFov_thread)
+                    fov_val = dpg.add_slider_int(label='fov', max_value=179, min_value=1, width=200, default_value=90)
 
 
             
@@ -518,14 +606,11 @@ with dpg.window() as window:
 
             NoFlash_ = dpg.add_checkbox(label='no flash', callback=NoFlash_thread)
 
+            no_smoke_ = dpg.add_checkbox(label='no smoke', callback=no_smoke_thread)
+
             ShowMoney_ = dpg.add_checkbox(label='show money', callback=ShowMoney)
 
             radar = dpg.add_checkbox(label='radar hack', callback=RadarHack_thread)
-
-            with dpg.group(horizontal=True):
-                _3rd_person_ = dpg.add_checkbox(label='3rd person', callback=_3rd_person_thread)
-                _3rd_person_bind_ = dpg.add_combo(['', 'v', 'mouse3'], width=100)
-                dpg.add_text('(bind can be broken)')
 
 
 with dpg.theme() as global_theme:
@@ -534,16 +619,7 @@ with dpg.theme() as global_theme:
         dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5, category=dpg.mvThemeCat_Core)
         dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 5, category=dpg.mvThemeCat_Core)
         dpg.add_theme_style(dpg.mvStyleVar_PopupRounding, 5, category=dpg.mvThemeCat_Core)
-        '''
-        dpg.add_theme_color(dpg.mvThemeCol_TabActive, (53, 0, 85), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_TabUnfocusedActive, (53, 0, 85), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_TabHovered, (56, 0, 99), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (56, 0, 99), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (53, 0, 85), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_CheckMark, (40, 93, 0), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (40, 93, 0), category=dpg.mvThemeCat_Core)
-        dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (40, 93, 0), category=dpg.mvThemeCat_Core)
-        '''
+
 
 
 dpg.bind_theme(global_theme)
