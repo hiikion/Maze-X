@@ -1,4 +1,4 @@
-# Maze-X: csgo hack (recode soon)
+# Maze-X: csgo hack (
 
 
 
